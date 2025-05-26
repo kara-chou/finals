@@ -41,18 +41,19 @@
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: var(--light-purple);
+  font-weight: bold;
 }
 
 .form-group input {
   width: 27.5rem;
   padding: 0.75rem 1rem;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 1.5px solid var(--placeholder);
   border-radius: var(--xxs);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--muted-glass);
   color: var(--white);
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-family: inherit;
   transition: all 0.2s ease;
 }
@@ -64,7 +65,7 @@
 }
 
 .form-group input::placeholder {
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--placeholder);
 }
 
 .form-actions {
@@ -78,7 +79,7 @@
   padding: 0.75rem;
   border: none;
   border-radius: var(--xxs);
-  font-size: 1rem;
+  font-size: 1.2rem;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
@@ -87,11 +88,14 @@
 
 .submit-button {
   background-color: var(--light-purple);
+  box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
+
   color: var(--bg);
 }
 
 .cancel-button {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--glass);
+  box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
   color: var(--white);
 }
 
@@ -112,15 +116,16 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none !important;
   margin: 0 !important;
   display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
-input[type="number"]:hover,
-input[type="number"]:focus {
-  -moz-appearance: textfield !important;
-  appearance: textfield !important;
-}
-
-/* Additional measures to prevent scroll */
+/* Prevent scroll on number inputs */
 input[type="number"] {
-  scroll-behavior: none;
+  scroll-behavior: none !important;
+  pointer-events: auto !important;
+}
+
+input[type="number"]:focus {
+  pointer-events: auto !important;
 }

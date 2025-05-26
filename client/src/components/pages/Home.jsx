@@ -51,10 +51,12 @@ const ClassCard = ({ classInfo, onDelete }) => {
         </button>
       </div>
       <h2>{classInfo.name}</h2>
-      <p className="class-grade">Current Grade: {classInfo.currentGrade}%</p>
-      <p className="class-goal">Goal: {classInfo.desiredGrade}%</p>
-      <p className="class-final">Final Weight: {classInfo.finalWeight}%</p>
-      <p className="class-needed">Needed on Final: {neededGrade}%</p>
+      <p className="class-grade">{classInfo.currentGrade}%</p>
+      <p className="class-goal">{classInfo.desiredGrade}%</p>
+      <p className="class-final">{classInfo.finalWeight}%</p>
+      <p className="class-needed">
+        <span>{neededGrade}%</span>
+      </p>
     </div>
   );
 };

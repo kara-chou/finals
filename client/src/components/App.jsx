@@ -1,6 +1,5 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-
 import jwt_decode from "jwt-decode";
 
 import "../utilities.css";
@@ -9,7 +8,8 @@ import { socket } from "../client-socket";
 
 import { get, post } from "../utilities";
 
-export const UserContext = createContext(null);
+export const UserContext = React.createContext({});
+export const ThemeContext = React.createContext({});
 
 /**
  * Define the "App" component
@@ -17,6 +17,12 @@ export const UserContext = createContext(null);
 const App = () => {
   const [userId, setUserId] = useState(undefined);
   const [isLoading, setIsLoading] = useState(true);
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
+
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   useEffect(() => {
     get("/api/whoami")
@@ -62,16 +68,15 @@ const App = () => {
     }
   };
 
-  const authContextValue = {
-    userId,
-    isLoading,
-    handleLogin,
-    handleLogout,
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
   };
 
   return (
-    <UserContext.Provider value={authContextValue}>
-      <Outlet />
+    <UserContext.Provider value={{ userId, isLoading, handleLogin, handleLogout }}>
+      <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <Outlet />
+      </ThemeContext.Provider>
     </UserContext.Provider>
   );
 };

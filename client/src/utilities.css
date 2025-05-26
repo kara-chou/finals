@@ -19,17 +19,28 @@
 @import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap");
 
 :root {
-  --bg: #4b4162;
+  --bg: #444162;
   --blue: #86a3c1;
   --white: #fff;
   --glass: rgba(255, 255, 255, 0.1);
-  --light-purple: #d7ccf3;
+  --light-purple: #e4d9ff;
+  --placeholder: rgba(255, 255, 255, 0.3);
+  --muted-glass: rgba(255, 255, 255, 0.05);
 
-  --xxs: 1vw;
+  --xxs: 0.5rem;
   --xs: 2vw;
   --s: 4vw;
   --m: 8vw;
   --l: 16vw;
+}
+
+:root[data-theme="light"] {
+  --bg: hsl(227, 57%, 89%);
+  --white: #0f1847;
+  --light-purple: #4d3f83;
+  --glass: rgba(255, 255, 255, 0.3);
+  --placeholder: rgba(58, 27, 74, 0.3);
+  --muted-glass: rgba(0, 0, 0, 0.05);
 }
 
 body {

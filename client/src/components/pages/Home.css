@@ -39,11 +39,12 @@
   align-items: center;
   gap: 0.5rem;
   font-family: inherit;
+  box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
 }
 
 .add-class-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.3);
 }
 
 .classes-grid {
@@ -63,16 +64,14 @@
   position: relative;
   display: flex;
   flex-direction: column;
-}
-
-.class-card:hover {
-  transform: translateY(-4px);
+  text-shadow: 0 0 0.15rem rgba(0, 0, 0, 0.15);
 }
 
 .class-card h2 {
   margin: 0 0 1rem 0;
   color: var(--light-purple);
   padding-right: 2.5rem;
+  text-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.2);
 }
 
 .class-card p {
@@ -80,12 +79,40 @@
   font-size: 1.1rem;
 }
 
+/* Add bold to labels but not values */
+.class-grade::before {
+  content: "Current Grade: ";
+  font-weight: bold;
+}
+
+.class-goal::before {
+  content: "Goal: ";
+  font-weight: bold;
+}
+
+.class-final::before {
+  content: "Final Weight: ";
+  font-weight: bold;
+}
+
 .class-needed {
   margin-top: 1rem !important;
   padding-top: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--light-purple);
+}
+
+.class-needed::before {
+  content: "Needed on Final: ";
   font-weight: bold;
+  font-size: 1.5rem;
+}
+
+/* Make the needed grade value white */
+.class-needed span {
+  font-weight: bold;
+  color: var(--white);
+  font-size: 1.5rem;
 }
 
 .card-actions {
@@ -106,7 +133,7 @@
   align-items: center;
   justify-content: center;
   background: none;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--white);
   border: none;
   border-radius: 50%;
   font-size: 1rem;
@@ -116,7 +143,7 @@
 
 .edit-button:hover,
 .delete-button:hover:not(:disabled) {
-  color: white;
+  color: var(--white);
   transform: scale(1.1);
 }
 

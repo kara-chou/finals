@@ -66,18 +66,10 @@ const Classes = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // Only allow changes from keyboard input
-    if (e.nativeEvent.inputType) {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
-  };
-
-  const preventScrollInput = (e) => {
-    e.preventDefault();
-    e.currentTarget.blur();
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -133,6 +125,7 @@ const Classes = () => {
                 onChange={handleChange}
                 required
                 placeholder="e.g., 18.06"
+                autoComplete="off"
               />
             </div>
             <div className="form-group">
@@ -143,11 +136,6 @@ const Classes = () => {
                 name="currentGrade"
                 value={formData.currentGrade}
                 onChange={handleChange}
-                onWheel={preventScrollInput}
-                onFocus={(e) =>
-                  e.target.addEventListener("wheel", preventScrollInput, { passive: false })
-                }
-                onBlur={(e) => e.target.removeEventListener("wheel", preventScrollInput)}
                 required
                 min="0"
                 max="100"
@@ -163,11 +151,6 @@ const Classes = () => {
                 name="desiredGrade"
                 value={formData.desiredGrade}
                 onChange={handleChange}
-                onWheel={preventScrollInput}
-                onFocus={(e) =>
-                  e.target.addEventListener("wheel", preventScrollInput, { passive: false })
-                }
-                onBlur={(e) => e.target.removeEventListener("wheel", preventScrollInput)}
                 required
                 min="0"
                 max="100"
@@ -183,11 +166,6 @@ const Classes = () => {
                 name="finalWeight"
                 value={formData.finalWeight}
                 onChange={handleChange}
-                onWheel={preventScrollInput}
-                onFocus={(e) =>
-                  e.target.addEventListener("wheel", preventScrollInput, { passive: false })
-                }
-                onBlur={(e) => e.target.removeEventListener("wheel", preventScrollInput)}
                 required
                 min="0"
                 max="100"
