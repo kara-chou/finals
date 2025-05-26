@@ -9,10 +9,97 @@
 
 .home-container {
   padding: 2rem;
+  padding-top: 5rem;
   color: var(--white);
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.home-container h1 {
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 2rem;
+}
+
+.home-header h1 {
+  margin: 0;
+}
+
+.add-class-button {
+  background-color: var(--light-purple);
+  color: var(--bg);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--xxs);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: inherit;
+}
+
+.add-class-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.2);
+}
+
+.classes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 1rem 0;
+}
+
+.class-card {
+  background-color: var(--glass);
+  backdrop-filter: blur(8px);
+  padding: 1.5rem;
+  box-shadow: 0 0 0.3rem var(--light-purple);
+  border-radius: var(--xxs);
+  transition: transform 0.2s ease;
+}
+
+.class-card:hover {
+  transform: translateY(-4px);
+}
+
+.class-card h2 {
+  margin: 0 0 1rem 0;
+  color: var(--light-purple);
+}
+
+.class-card p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.class-needed {
+  margin-top: 1rem !important;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--light-purple);
+  font-weight: bold;
+}
+
+.no-classes {
   text-align: center;
+  grid-column: 1 / -1;
+  padding: 3rem;
+  background-color: var(--glass);
+  border-radius: var(--xxs);
+  backdrop-filter: blur(8px);
+}
+
+.no-classes p:first-child {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--light-purple);
+}
+
+.no-classes p:last-child {
+  font-size: 1.1rem;
+  opacity: 0.8;
 }

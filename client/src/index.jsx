@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./components/App";
 import Login from "./components/pages/Login";
 import Home from "./components/pages/Home";
+import Classes from "./components/pages/Classes";
 import NotFound from "./components/pages/NotFound";
 
 import {
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
     <Route errorElement={<NotFound />} element={<App />}>
       <Route path="/" element={<Login />} />
       <Route path="/home" element={<Home />} />
+      <Route path="/classes" element={<Classes />} />
     </Route>
   )
 );

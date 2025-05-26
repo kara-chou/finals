@@ -4,11 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../App";
 import "./NavBar.css";
 import "../../utilities.css";
-import { useState } from "react";
 
 const NavBar = () => {
   const { handleLogout } = useContext(UserContext);
-
   const navigate = useNavigate();
 
   const handleLogoutClick = () => {
@@ -18,11 +16,13 @@ const NavBar = () => {
   };
 
   return (
-    <div className="navbar-container">
-      <div onClick={handleLogoutClick} className="navbar-link">
-        Logout Button
+    <nav className="navbar-container">
+      <div className="navbar-content">
+        <div onClick={handleLogoutClick} className="navbar-link" title="Logout">
+          <i className="fas fa-sign-out-alt" aria-label="Logout"></i>
+        </div>
       </div>
-    </div>
+    </nav>
   );
 };
 
