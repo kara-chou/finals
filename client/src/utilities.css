@@ -16,23 +16,16 @@
 
 /* TODO: REPLACE WITH YOUR OWN FONT! */
 @import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap");
 
 :root {
-  --pink: #fde2e4;
-  --pink-shadow: #825659;
-  --blue: #d6e2e9;
-  --blue-shadow: #2f4552;
-  --bg: #621e23;
-
-  --primary: #396dff;
-  --primary--dim: #6987db;
-  --primary: #396dff;
-  --primary--dim: #6987db;
-  --darkgrey: #d4d4d4;
-  --medgrey: #e0e0e0;
-  --grey: #f7f7f7;
+  --bg: #4b4162;
+  --blue: #86a3c1;
   --white: #fff;
+  --glass: rgba(255, 255, 255, 0.1);
+  --light-purple: #d7ccf3;
 
+  --xxs: 1vw;
   --xs: 2vw;
   --s: 4vw;
   --m: 8vw;
@@ -43,7 +36,7 @@ body {
   background-color: var(--bg);
   margin: 0;
   padding: 0;
-  font-family: "Roboto", sans-serif;
+  font-family: "EB Garamond", serif;
   font-weight: 300;
 }
 
