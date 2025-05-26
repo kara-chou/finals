@@ -1,0 +1,18 @@
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: var(--white);
+  font-size: 1.2rem;
+}
+
+.home-container {
+  padding: 2rem;
+  color: var(--white);
+}
+
+.home-container h1 {
+  margin-bottom: 2rem;
+  text-align: center;
+}
