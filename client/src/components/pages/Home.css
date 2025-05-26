@@ -60,6 +60,9 @@
   box-shadow: 0 0 0.3rem var(--light-purple);
   border-radius: var(--xxs);
   transition: transform 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .class-card:hover {
@@ -69,6 +72,7 @@
 .class-card h2 {
   margin: 0 0 1rem 0;
   color: var(--light-purple);
+  padding-right: 2.5rem;
 }
 
 .class-card p {
@@ -82,6 +86,56 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--light-purple);
   font-weight: bold;
+}
+
+.card-actions {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 1;
+}
+
+.edit-button,
+.delete-button {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  color: rgba(255, 255, 255, 0.5);
+  border: none;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-button:hover,
+.delete-button:hover:not(:disabled) {
+  color: white;
+  transform: scale(1.1);
+}
+
+.delete-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.edit-button i,
+.delete-button i {
+  font-size: 1.1rem;
+}
+
+.delete-text {
+  display: none;
+}
+
+.delete-button:hover .delete-text {
+  display: inline;
 }
 
 .no-classes {

@@ -3,14 +3,17 @@
   padding-top: 5rem;
   color: var(--white);
   min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .classes-content {
-  max-width: 600px;
-  margin: 0 auto;
+  width: 100%;
+  width: 30rem;
   background-color: var(--glass);
   backdrop-filter: blur(8px);
-  padding: 2rem;
+  padding: 2.5rem;
   border-radius: var(--xxs);
   box-shadow: 0 0 0.3rem var(--light-purple);
 }
@@ -18,7 +21,8 @@
 .classes-content h1 {
   margin: 0 0 2rem 0;
   text-align: center;
-  color: var(--light-purple);
+  color: var(--white);
+  font-size: 2rem;
 }
 
 .error-message {
@@ -38,23 +42,25 @@
   display: block;
   margin-bottom: 0.5rem;
   font-size: 1.1rem;
+  color: var(--light-purple);
 }
 
 .form-group input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 27.5rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--xxs);
   background: rgba(255, 255, 255, 0.05);
   color: var(--white);
   font-size: 1rem;
   font-family: inherit;
+  transition: all 0.2s ease;
 }
 
 .form-group input:focus {
   outline: none;
   border-color: var(--light-purple);
-  box-shadow: 0 0 0 2px rgba(215, 204, 243, 0.2);
+  box-shadow: 0 0 0.5rem rgba(215, 204, 243, 0.3);
 }
 
 .form-group input::placeholder {
@@ -76,6 +82,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
+  font-weight: 500;
 }
 
 .submit-button {
@@ -94,13 +101,26 @@
   box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.2);
 }
 
-/* Remove number input spinners */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+/* Prevent number input interactions */
+input[type="number"] {
+  -moz-appearance: textfield !important;
+  appearance: textfield !important;
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+  display: none !important;
+}
+
+input[type="number"]:hover,
+input[type="number"]:focus {
+  -moz-appearance: textfield !important;
+  appearance: textfield !important;
+}
+
+/* Additional measures to prevent scroll */
 input[type="number"] {
-  -moz-appearance: textfield;
+  scroll-behavior: none;
 }

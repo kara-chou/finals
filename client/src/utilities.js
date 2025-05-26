@@ -61,3 +61,32 @@ export function post(endpoint, params = {}) {
       throw `POST request to ${endpoint} failed with error:\n${error}`;
     });
 }
+
+// Helper code to make a delete request.
+// Returns a Promise to a JSON Object.
+export function del(endpoint) {
+  return fetch(endpoint, {
+    method: "delete",
+    headers: { "Content-type": "application/json" },
+  })
+    .then(convertToJSON)
+    .catch((error) => {
+      // give a useful error message
+      throw `DELETE request to ${endpoint} failed with error:\n${error}`;
+    });
+}
+
+// Helper code to make a PUT request.
+// Returns a Promise to a JSON Object.
+export function put(endpoint, body) {
+  return fetch(endpoint, {
+    method: "PUT",
+    headers: { "Content-type": "application/json" },
+    body: JSON.stringify(body),
+  })
+    .then(convertToJSON)
+    .catch((error) => {
+      // give a useful error message
+      throw `PUT request to ${endpoint} failed with error:\n${error}`;
+    });
+}

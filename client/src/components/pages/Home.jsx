@@ -4,24 +4,57 @@ import NavBar from "../modules/NavBar";
 import { UserContext } from "../App";
 import "../../utilities.css";
 import "./Home.css";
-import { get } from "../../utilities";
+import { get, del } from "../../utilities";
 
-const ClassCard = ({ classInfo }) => {
+const ClassCard = ({ classInfo, onDelete }) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const navigate = useNavigate();
+
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this class?")) {
+      setIsDeleting(true);
+      try {
+        await del(`/api/classes/${classInfo._id}`);
+        onDelete(classInfo._id);
+      } catch (err) {
+        console.error("Failed to delete class:", err);
+        alert("Failed to delete class. Please try again.");
+      } finally {
+        setIsDeleting(false);
+      }
+    }
+  };
+
+  const handleEdit = () => {
+    navigate(`/classes/${classInfo._id}`);
+  };
+
+  const neededGrade = Math.max(
+    0,
+    (classInfo.desiredGrade - ((100 - classInfo.finalWeight) * classInfo.currentGrade) / 100) /
+      (classInfo.finalWeight / 100)
+  ).toFixed(2);
+
   return (
     <div className="class-card">
+      <div className="card-actions">
+        <button className="edit-button" onClick={handleEdit} title="Edit Class">
+          <i className="fas fa-pencil-alt"></i>
+        </button>
+        <button
+          className="delete-button"
+          onClick={handleDelete}
+          disabled={isDeleting}
+          title="Delete Class"
+        >
+          <i className="fas fa-trash-alt"></i>
+        </button>
+      </div>
       <h2>{classInfo.name}</h2>
       <p className="class-grade">Current Grade: {classInfo.currentGrade}%</p>
       <p className="class-goal">Goal: {classInfo.desiredGrade}%</p>
       <p className="class-final">Final Weight: {classInfo.finalWeight}%</p>
-      <p className="class-needed">
-        Needed on Final:{" "}
-        {(
-          (classInfo.desiredGrade -
-            ((100 - classInfo.finalWeight) * classInfo.currentGrade) / 100) /
-          (classInfo.finalWeight / 100)
-        ).toFixed(2)}
-        %
-      </p>
+      <p className="class-needed">Needed on Final: {neededGrade}%</p>
     </div>
   );
 };
@@ -38,6 +71,10 @@ const Home = () => {
       });
     }
   }, [userId]);
+
+  const handleDelete = (deletedId) => {
+    setClasses((prevClasses) => prevClasses.filter((c) => c._id !== deletedId));
+  };
 
   if (isLoading) {
     return <div className="loading-container">Loading...</div>;
@@ -64,7 +101,9 @@ const Home = () => {
               <p>Click the "Add Class" button to get started.</p>
             </div>
           ) : (
-            classes.map((classInfo) => <ClassCard key={classInfo._id} classInfo={classInfo} />)
+            classes.map((classInfo) => (
+              <ClassCard key={classInfo._id} classInfo={classInfo} onDelete={handleDelete} />
+            ))
           )}
         </div>
       </div>

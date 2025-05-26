@@ -1,13 +1,14 @@
-import React, { useState, useContext } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../App";
 import NavBar from "../modules/NavBar";
-import { post } from "../../utilities";
+import { get, post, put } from "../../utilities";
 import "./Classes.css";
 
 const Classes = () => {
   const { userId, isLoading } = useContext(UserContext);
   const navigate = useNavigate();
+  const { id } = useParams();
   const [formData, setFormData] = useState({
     name: "",
     currentGrade: "",
@@ -15,13 +16,68 @@ const Classes = () => {
     finalWeight: "",
   });
   const [error, setError] = useState("");
+  const [isLoading2, setIsLoading2] = useState(false);
+
+  useEffect(() => {
+    const fetchClass = async () => {
+      if (id) {
+        setIsLoading2(true);
+        try {
+          const classData = await get(`/api/classes/${id}`);
+          setFormData({
+            name: classData.name,
+            currentGrade: classData.currentGrade,
+            desiredGrade: classData.desiredGrade,
+            finalWeight: classData.finalWeight,
+          });
+        } catch (err) {
+          console.error("Error fetching class:", err);
+          setError("Failed to load class data");
+          navigate("/home");
+        } finally {
+          setIsLoading2(false);
+        }
+      }
+    };
+
+    fetchClass();
+  }, [id, navigate]);
+
+  // Add event listener to prevent scroll on inputs
+  useEffect(() => {
+    const inputs = document.querySelectorAll('input[type="text"]');
+
+    const preventScroll = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    };
+
+    inputs.forEach((input) => {
+      input.addEventListener("wheel", preventScroll, { passive: false });
+    });
+
+    return () => {
+      inputs.forEach((input) => {
+        input.removeEventListener("wheel", preventScroll);
+      });
+    };
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    // Only allow changes from keyboard input
+    if (e.nativeEvent.inputType) {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
+  const preventScrollInput = (e) => {
+    e.preventDefault();
+    e.currentTarget.blur();
   };
 
   const handleSubmit = async (e) => {
@@ -39,15 +95,19 @@ const Classes = () => {
     }
 
     try {
-      await post("/api/classes", formData);
+      if (id) {
+        await put(`/api/classes/${id}`, formData);
+      } else {
+        await post("/api/classes", formData);
+      }
       navigate("/home");
     } catch (err) {
-      setError("Failed to create class. Please try again.");
-      console.error("Error creating class:", err);
+      setError(`Failed to ${id ? "update" : "create"} class. Please try again.`);
+      console.error(`Error ${id ? "updating" : "creating"} class:`, err);
     }
   };
 
-  if (isLoading) {
+  if (isLoading || isLoading2) {
     return <div className="loading-container">Loading...</div>;
   }
 
@@ -60,7 +120,7 @@ const Classes = () => {
       <NavBar />
       <div className="classes-container">
         <div className="classes-content">
-          <h1>Add New Class</h1>
+          <h1>{id ? "Edit Class" : "Add Class"}</h1>
           {error && <div className="error-message">{error}</div>}
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -72,7 +132,7 @@ const Classes = () => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                placeholder="e.g., Calculus 101"
+                placeholder="e.g., 18.06"
               />
             </div>
             <div className="form-group">
@@ -83,10 +143,15 @@ const Classes = () => {
                 name="currentGrade"
                 value={formData.currentGrade}
                 onChange={handleChange}
+                onWheel={preventScrollInput}
+                onFocus={(e) =>
+                  e.target.addEventListener("wheel", preventScrollInput, { passive: false })
+                }
+                onBlur={(e) => e.target.removeEventListener("wheel", preventScrollInput)}
                 required
                 min="0"
                 max="100"
-                step="0.01"
+                step="any"
                 placeholder="e.g., 85"
               />
             </div>
@@ -98,10 +163,15 @@ const Classes = () => {
                 name="desiredGrade"
                 value={formData.desiredGrade}
                 onChange={handleChange}
+                onWheel={preventScrollInput}
+                onFocus={(e) =>
+                  e.target.addEventListener("wheel", preventScrollInput, { passive: false })
+                }
+                onBlur={(e) => e.target.removeEventListener("wheel", preventScrollInput)}
                 required
                 min="0"
                 max="100"
-                step="0.01"
+                step="any"
                 placeholder="e.g., 90"
               />
             </div>
@@ -113,10 +183,15 @@ const Classes = () => {
                 name="finalWeight"
                 value={formData.finalWeight}
                 onChange={handleChange}
+                onWheel={preventScrollInput}
+                onFocus={(e) =>
+                  e.target.addEventListener("wheel", preventScrollInput, { passive: false })
+                }
+                onBlur={(e) => e.target.removeEventListener("wheel", preventScrollInput)}
                 required
                 min="0"
                 max="100"
-                step="0.01"
+                step="any"
                 placeholder="e.g., 20"
               />
             </div>
@@ -125,7 +200,7 @@ const Classes = () => {
                 Cancel
               </button>
               <button type="submit" className="submit-button">
-                Add Class
+                {id ? "Save Changes" : "Add Class"}
               </button>
             </div>
           </form>
