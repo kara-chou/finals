@@ -64,6 +64,8 @@ router.post("/classes", auth.ensureLoggedIn, async (req, res) => {
       currentGrade: req.body.currentGrade,
       desiredGrade: req.body.desiredGrade,
       finalWeight: req.body.finalWeight,
+      isUsingCategories: req.body.isUsingCategories,
+      categories: req.body.categories || [],
     });
     const savedClass = await newClass.save();
     res.send(savedClass);
@@ -128,6 +130,8 @@ router.put("/classes/:id", auth.ensureLoggedIn, async (req, res) => {
         currentGrade: req.body.currentGrade,
         desiredGrade: req.body.desiredGrade,
         finalWeight: req.body.finalWeight,
+        isUsingCategories: req.body.isUsingCategories,
+        categories: req.body.categories || [],
       },
       { new: true } // Return the updated document
     );

@@ -1,5 +1,15 @@
 const mongoose = require("mongoose");
 
+const CategorySchema = new mongoose.Schema({
+  name: String,
+  weight: String,
+  weightValue: Number,
+  cutoff: String,
+  cutoffValue: Number,
+  grade: String,
+  gradeValue: Number,
+});
+
 const ClassSchema = new mongoose.Schema(
   {
     userId: {
@@ -27,6 +37,14 @@ const ClassSchema = new mongoose.Schema(
       required: true,
       min: 0,
       max: 100,
+    },
+    isUsingCategories: {
+      type: Boolean,
+      default: false,
+    },
+    categories: {
+      type: [CategorySchema],
+      default: [],
     },
   },
   {
