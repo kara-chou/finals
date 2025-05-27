@@ -71,7 +71,7 @@
   margin: 0 0 1rem 0;
   color: var(--light-purple);
   padding-right: 2.5rem;
-  text-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.2);
+  text-shadow: 0 0 0.1rem rgba(0, 0, 0, 0.2);
 }
 
 .class-card p {
