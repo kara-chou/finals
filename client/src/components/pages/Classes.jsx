@@ -208,10 +208,46 @@ const Classes = () => {
     return (weightedSum / totalWeight).toFixed(2);
   };
 
+  const calculateWeightedDesiredGrade = () => {
+    if (!useCategories) {
+      return parseFloat(classData.desiredGrade);
+    }
+
+    // Get categories with valid weights and cutoffs
+    const validCategories = categories.filter(
+      (cat) => cat.weightValue && !isNaN(parseFloat(cat.weightValue))
+    );
+
+    if (validCategories.length === 0) {
+      return parseFloat(classData.desiredGrade);
+    }
+
+    const defaultCutoff = parseFloat(classData.desiredGrade);
+    let totalWeightedCutoff = 0;
+    let totalWeight = 0;
+
+    // Calculate for categories with specific cutoffs
+    validCategories.forEach((cat) => {
+      const weight = parseFloat(cat.weightValue);
+      const cutoff = cat.cutoffValue ? parseFloat(cat.cutoffValue) : defaultCutoff;
+
+      totalWeightedCutoff += (weight / 100) * cutoff;
+      totalWeight += weight;
+    });
+
+    // Add in the remaining weight with default cutoff
+    const remainingWeight = 100 - totalWeight;
+    if (remainingWeight > 0) {
+      totalWeightedCutoff += (remainingWeight / 100) * defaultCutoff;
+    }
+
+    return totalWeightedCutoff;
+  };
+
   const calculateNeededGrade = () => {
     const current = parseFloat(useCategories ? calculateCurrentGrade() : classData.currentGrade);
-    const desired = parseFloat(classData.desiredGrade);
     const weight = parseFloat(classData.finalWeight);
+    const desired = calculateWeightedDesiredGrade();
 
     if (isNaN(current) || isNaN(desired) || isNaN(weight) || weight === 0) {
       return "N/A";
@@ -246,7 +282,7 @@ const Classes = () => {
   const getDefaultCutoffPlaceholder = (desiredGrade) => {
     if (!desiredGrade) return "e.g., 90 or 18/20";
     const decimal = (parseFloat(desiredGrade) / 100).toFixed(2);
-    return `Default: ${desiredGrade}% or ${decimal}`;
+    return `Default: ${desiredGrade} or ${decimal}`;
   };
 
   // Add event listener to prevent scroll on inputs
@@ -333,114 +369,130 @@ const Classes = () => {
             </div>
 
             <div className="form-group">
-              <label>{!useCategories ? "Current Grade (%)" : "Current Grade"}</label>
-              <div className="toggle-buttons">
-                <button
-                  type="button"
-                  className={!useCategories ? "active" : ""}
-                  onClick={() => setUseCategories(false)}
-                >
-                  Direct Input
-                </button>
-                <button
-                  type="button"
-                  className={useCategories ? "active" : ""}
-                  onClick={() => setUseCategories(true)}
-                >
-                  Use Categories
-                </button>
-              </div>
+              <div className="grade-controls">
+                <div className="grade-header">
+                  <label>{!useCategories ? "Current Grade (%)" : "Current Grade"}</label>
+                  <div className="curr-container">
+                    <div className="toggle-buttons">
+                      <button
+                        type="button"
+                        className={!useCategories ? "active" : ""}
+                        onClick={() => setUseCategories(false)}
+                      >
+                        Direct Input
+                      </button>
+                      <button
+                        type="button"
+                        className={useCategories ? "active" : ""}
+                        onClick={() => setUseCategories(true)}
+                      >
+                        Use Categories
+                      </button>
+                    </div>
 
-              {!useCategories ? (
-                <div className="direct-input">
-                  <input
-                    type="number"
-                    id="currentGrade"
-                    name="currentGrade"
-                    value={classData.currentGrade}
-                    onChange={handleChange}
-                    required
-                    min="0"
-                    max="100"
-                    step="any"
-                    placeholder="e.g., 85"
-                  />
-                </div>
-              ) : (
-                <div className="categories-table">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Category</th>
-                        <th>Weight</th>
-                        <th>Grade</th>
-                        <th>A Cutoff</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {categories.map((category, index) => (
-                        <tr key={index}>
-                          <td>
-                            <input
-                              type="text"
-                              value={category.name}
-                              onChange={(e) => handleCategoryChange(index, "name", e.target.value)}
-                              placeholder="e.g., Midterm"
-                            />
-                          </td>
-                          <td>
-                            <input
-                              type="text"
-                              value={category.weight}
-                              onChange={(e) =>
-                                handleCategoryChange(index, "weight", e.target.value)
-                              }
-                              placeholder="e.g., 30 or 3/10"
-                            />
-                          </td>
-                          <td>
-                            <input
-                              type="text"
-                              value={category.grade}
-                              onChange={(e) => handleCategoryChange(index, "grade", e.target.value)}
-                              placeholder="e.g., 85 or 17/20"
-                            />
-                          </td>
-                          <td>
-                            <input
-                              type="text"
-                              value={category.cutoff}
-                              onChange={(e) =>
-                                handleCategoryChange(index, "cutoff", e.target.value)
-                              }
-                              placeholder={getDefaultCutoffPlaceholder(classData.desiredGrade)}
-                              className={!category.cutoff ? "default-cutoff" : ""}
-                            />
-                          </td>
-                          <td>
-                            <button
-                              type="button"
-                              className="remove-category"
-                              onClick={() => removeCategory(index)}
-                              title="Remove category"
-                            >
-                              <i className="fas fa-times"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <button type="button" className="add-category" onClick={addCategory}>
-                    <i className="fas fa-plus"></i> Add Category
-                  </button>
-                  <div className="calculated-grade">
-                    Current Grade: {calculateCurrentGrade() || "N/A"}
-                    {calculateCurrentGrade() && "%"}
+                    {!useCategories ? (
+                      <div className="form-group needed">
+                        <input
+                          type="number"
+                          id="currentGrade"
+                          name="currentGrade"
+                          value={classData.currentGrade}
+                          onChange={handleChange}
+                          required
+                          min="0"
+                          max="100"
+                          step="any"
+                          placeholder="e.g., 85"
+                        />
+                      </div>
+                    ) : (
+                      <div className="categories-table">
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Category</th>
+                              <th>Weight</th>
+                              <th>Grade</th>
+                              <th>A Cutoff</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {categories.map((category, index) => (
+                              <tr key={index}>
+                                <td>
+                                  <input
+                                    type="text"
+                                    value={category.name}
+                                    onChange={(e) =>
+                                      handleCategoryChange(index, "name", e.target.value)
+                                    }
+                                    placeholder="e.g., Midterm"
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    type="text"
+                                    value={category.weight}
+                                    onChange={(e) =>
+                                      handleCategoryChange(index, "weight", e.target.value)
+                                    }
+                                    placeholder="e.g., 30 or 3/10"
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    type="text"
+                                    value={category.grade}
+                                    onChange={(e) =>
+                                      handleCategoryChange(index, "grade", e.target.value)
+                                    }
+                                    placeholder="e.g., 85 or 17/20"
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    type="text"
+                                    value={category.cutoff}
+                                    onChange={(e) =>
+                                      handleCategoryChange(index, "cutoff", e.target.value)
+                                    }
+                                    placeholder={getDefaultCutoffPlaceholder(
+                                      classData.desiredGrade
+                                    )}
+                                    className={!category.cutoff ? "default-cutoff" : ""}
+                                  />
+                                </td>
+                                <td>
+                                  <button
+                                    type="button"
+                                    className="remove-category"
+                                    onClick={() => removeCategory(index)}
+                                    title="Remove category"
+                                  >
+                                    <i className="fas fa-times"></i>
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                        <button type="button" className="add-category" onClick={addCategory}>
+                          <i className="fas fa-plus"></i> Add Category
+                        </button>
+                        <div className="calculated-grade">
+                          Current Grade: {calculateCurrentGrade() || "N/A"}
+                          {calculateCurrentGrade() && "%"}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
-              )}
+              </div>
+            </div>
+            <div className="calculator-result">
+              <h2>Needed on Final</h2>
+              <div className="needed-grade">{calculateNeededGrade()}</div>
             </div>
 
             <div className="form-actions">
@@ -452,13 +504,6 @@ const Classes = () => {
               </button>
             </div>
           </form>
-
-          <div className="grade-calculator">
-            <div className="calculator-result">
-              <h2>Needed on Final</h2>
-              <div className="needed-grade">{calculateNeededGrade()}</div>
-            </div>
-          </div>
         </div>
       </div>
     </>

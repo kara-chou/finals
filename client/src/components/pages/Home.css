@@ -90,11 +90,6 @@
   font-weight: bold;
 }
 
-.class-final::before {
-  content: "Final Weight: ";
-  font-weight: bold;
-}
-
 .class-needed {
   margin-top: 1rem !important;
   padding-top: 1rem;

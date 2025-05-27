@@ -9,7 +9,7 @@
 }
 
 .classes-content {
-  max-width: 65vw;
+  width: 70vw;
   background-color: var(--glass);
   backdrop-filter: blur(8px);
   padding: 2.5rem;
@@ -34,19 +34,21 @@
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
+  min-width: 10rem;
   font-size: 1.2rem;
   color: var(--light-purple);
   font-weight: bold;
 }
 
 .form-group input {
-  width: 62.5vw;
+  width: 60vw;
   padding: 0.75rem 1rem;
   border: 1.5px solid var(--placeholder);
   border-radius: var(--xxs);
@@ -55,6 +57,35 @@
   font-size: 1.2rem;
   font-family: inherit;
   transition: all 0.2s ease;
+}
+
+.form-group:has(.grade-controls) {
+  align-items: flex-start;
+}
+
+.grade-controls {
+  display: flex;
+  gap: 1rem;
+}
+
+.grade-controls label {
+  min-width: 10rem;
+  font-size: 1.2rem;
+  color: var(--light-purple);
+  font-weight: bold;
+}
+
+.curr-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: calc(70vw - 11rem);
+}
+
+.toggle-buttons {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
 }
 
 .form-group input:focus {
@@ -70,38 +101,51 @@
 .form-actions {
   display: flex;
   gap: 1rem;
-  margin-top: 0.75rem;
+  margin-top: 2rem;
 }
 
 .form-actions button {
   flex: 1;
-  padding: 0.75rem;
+  padding: 1rem;
   border: none;
   border-radius: var(--xxs);
   font-size: 1.2rem;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
-  font-weight: 500;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .submit-button {
   background-color: var(--light-purple);
-  box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
-
   color: var(--bg);
+  box-shadow: 0 0 1rem rgba(215, 204, 243, 0.3), 0 0.2rem 0.5rem rgba(0, 0, 0, 0.2);
 }
 
 .cancel-button {
-  background-color: var(--glass);
-  box-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
   color: var(--white);
+  border: 2px solid var(--white);
+  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.2);
 }
 
 .submit-button:hover,
 .cancel-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.2);
+}
+
+.submit-button:hover {
+  box-shadow: 0 0 1.5rem rgba(215, 204, 243, 0.4), 0 0.3rem 0.7rem rgba(0, 0, 0, 0.25);
+  background-color: var(--light-purple);
+}
+
+.cancel-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--light-purple);
+  color: var(--light-purple);
+  box-shadow: 0 0.3rem 0.7rem rgba(0, 0, 0, 0.25);
 }
 
 /* Prevent number input interactions */
@@ -130,14 +174,20 @@ input[type="number"]:focus {
 }
 
 .grade-toggle {
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
-.toggle-buttons {
+.grade-header {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  align-items: top;
+  gap: 1rem;
   margin-bottom: 0.75rem;
+  width: 100%;
+}
+
+.grade-header .toggle-buttons {
+  flex: 1;
+  margin-bottom: 0;
 }
 
 .toggle-buttons button {
@@ -166,12 +216,11 @@ input[type="number"]:focus {
 }
 
 .categories-table {
-  margin-top: 1rem;
-  width: 62.5vw;
   background: var(--glass);
   border-radius: var(--xxs);
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
 }
 
 .categories-table table {
@@ -180,13 +229,18 @@ input[type="number"]:focus {
   margin-bottom: 0.75rem;
 }
 
+.categories-table th,
+.categories-table td {
+  white-space: nowrap;
+  padding: 0.5rem;
+}
+
 .categories-table th {
   text-align: left;
   padding: 0.5rem;
   color: var(--light-purple);
   font-size: 1.3rem;
   font-weight: bold;
-  white-space: nowrap;
   background: var(--muted-glass);
   border: 1px solid var(--placeholder);
 }
@@ -273,7 +327,7 @@ input[type="number"]:focus {
 }
 
 .calculated-grade {
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
   padding: 0.5rem;
   color: var(--white);
   font-weight: bold;
@@ -281,9 +335,8 @@ input[type="number"]:focus {
 }
 
 .grade-calculator {
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--glass);
+  margin-top: 1rem;
+  padding-top: 1rem;
 }
 
 .calculator-result {
@@ -297,27 +350,31 @@ input[type="number"]:focus {
 }
 
 .needed-grade {
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: var(--white);
-  margin-top: 0.5rem;
   font-weight: bold;
+  text-shadow: 0 0 0.25rem rgba(255, 255, 255, 0.5);
+}
+
+.needed {
+  margin-bottom: 0;
 }
 
 .direct-input {
-  width: 62.5vw;
+  width: 100%;
 }
 
 .direct-input label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
   font-size: 1.2rem;
   color: var(--light-purple);
   font-weight: bold;
 }
 
 .direct-input input {
-  width: 62.5vw;
-  padding: 0.75rem 1rem;
+  width: 100%;
+  padding: 0;
   border: 1.5px solid var(--placeholder);
   border-radius: var(--xxs);
   background: var(--muted-glass);
