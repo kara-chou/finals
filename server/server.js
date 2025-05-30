@@ -78,7 +78,6 @@ mongoose
     console.log("Connected to MongoDB successfully");
     console.log("Using database:", databaseName);
     app.set("trust proxy", 1);
-
     // Set up session AFTER mongoose connection is established
     app.use(
       session({
@@ -87,8 +86,8 @@ mongoose
         saveUninitialized: false,
         name: "connect.sid",
         cookie: {
-          secure: true, // force secure in prod
-          sameSite: "none", // allow cross-site
+          secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
           maxAge: 24 * 60 * 60 * 1000,
           httpOnly: true,
           path: "/",
