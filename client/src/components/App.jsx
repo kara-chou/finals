@@ -48,6 +48,10 @@ const App = () => {
 
       const user = await post("/api/login", { token: userToken });
 
+      const verifyUser = await get("/api/whoami");
+      if (!verifyUser._id) {
+        throw new Error("Session not established properly");
+      }
       // Initialize socket after successful login
       await post("/api/initsocket", { socketid: socket.id });
       setUserId(user._id);
