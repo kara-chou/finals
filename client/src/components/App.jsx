@@ -47,10 +47,10 @@ const App = () => {
       console.log(`Logging in as ${decodedCredential.name}`);
 
       const user = await post("/api/login", { token: userToken });
-      setUserId(user._id);
 
       // Initialize socket after successful login
       await post("/api/initsocket", { socketid: socket.id });
+      setUserId(user._id);
 
       return user; // Return the user for the Login component
     } catch (err) {
