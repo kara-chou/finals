@@ -58,8 +58,17 @@ function login(req, res) {
     .then((user) => {
       // persist user in the session
       req.session.user = user;
-      console.log("User logged in successfully:", user._id);
-      res.send(user);
+
+      // Force session save
+      req.session.save((err) => {
+        if (err) {
+          console.error("Session save error:", err);
+          return res.status(500).send({ err: "Session save failed" });
+        }
+        console.log("User logged in successfully:", user._id);
+        console.log("Session saved with ID:", req.sessionID);
+        res.send(user);
+      });
     })
     .catch((err) => {
       console.error("Login failed:", err);

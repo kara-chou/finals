@@ -87,11 +87,12 @@ app.use(
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 24 * 60 * 60 * 1000,
-      httpOnly: true, // Add this for security
+      httpOnly: true,
     },
     store: require("connect-mongo").create({
-      client: mongoose.connection.getClient(),
-      dbName: databaseName,
+      mongoUrl: process.env.MONGO_SRV,
+      dbName: process.env.DB_NAME,
+      touchAfter: 24 * 3600, // lazy session update
     }),
   })
 );
