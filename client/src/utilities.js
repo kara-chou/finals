@@ -39,7 +39,9 @@ function convertToJSON(res) {
 // Returns a Promise to a JSON Object.
 export function get(endpoint, params = {}) {
   const fullPath = endpoint + "?" + formatParams(params);
-  return fetch(fullPath)
+  return fetch(fullPath, {
+    credentials: "include",
+  })
     .then(convertToJSON)
     .catch((error) => {
       // give a useful error message
@@ -54,6 +56,7 @@ export function post(endpoint, params = {}) {
     method: "post",
     headers: { "Content-type": "application/json" },
     body: JSON.stringify(params),
+    credentials: "include",
   })
     .then(convertToJSON) // convert result to JSON object
     .catch((error) => {
@@ -68,6 +71,7 @@ export function del(endpoint) {
   return fetch(endpoint, {
     method: "delete",
     headers: { "Content-type": "application/json" },
+    credentials: "include",
   })
     .then(convertToJSON)
     .catch((error) => {
@@ -83,6 +87,7 @@ export function put(endpoint, body) {
     method: "PUT",
     headers: { "Content-type": "application/json" },
     body: JSON.stringify(body),
+    credentials: "include",
   })
     .then(convertToJSON)
     .catch((error) => {
