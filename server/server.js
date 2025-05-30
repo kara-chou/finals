@@ -92,8 +92,7 @@ app.use(
       path: "/",
     },
     store: new (require("connect-mongo"))({
-      mongoUrl: process.env.MONGO_SRV,
-      dbName: process.env.DB_NAME,
+      mongooseConnection: mongoose.connection,
     }),
   })
 );
