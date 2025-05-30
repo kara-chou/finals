@@ -61,6 +61,12 @@ app.use(validator.checkRoutes);
 // allow us to process POST requests
 app.use(express.json());
 
+const isProduction = process.env.NODE_ENV === "production";
+
+// Debug logging:
+console.log("ENV:", process.env.NODE_ENV);
+console.log("isProduction:", isProduction);
+
 // connect to mongodb
 mongoose
   .connect(mongoConnectionURL, {
@@ -80,8 +86,8 @@ mongoose
         saveUninitialized: false,
         name: "connect.sid",
         cookie: {
-          secure: process.env.NODE_ENV === "production",
-          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+          secure: true, // force secure in prod
+          sameSite: "none", // allow cross-site
           maxAge: 24 * 60 * 60 * 1000,
           httpOnly: true,
           path: "/",
