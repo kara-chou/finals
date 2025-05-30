@@ -32,6 +32,12 @@ const cors = require("cors");
 const api = require("./api");
 const auth = require("./auth");
 
+// this checks if the user is logged in, and populates "req.user"
+app.use(auth.populateCurrentUser);
+
+// connect user-defined routes
+app.use("/api", api);
+
 // socket stuff
 const socketManager = require("./server-socket");
 
@@ -105,11 +111,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// this checks if the user is logged in, and populates "req.user"
 app.use(auth.populateCurrentUser);
-
-// connect user-defined routes
-app.use("/api", api);
+app.use("/api", require("./api"));
 
 // load the compiled react files, which will serve /index.html and /bundle.js
 const reactPath = path.resolve(__dirname, "..", "client", "dist");
