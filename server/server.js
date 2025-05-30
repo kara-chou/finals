@@ -45,22 +45,6 @@ console.log("Database Name:", databaseName);
 // mongoose 7 warning
 mongoose.set("strictQuery", false);
 
-// connect to mongodb
-mongoose
-  .connect(mongoConnectionURL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    dbName: databaseName,
-  })
-  .then(() => {
-    console.log("Connected to MongoDB successfully");
-    console.log("Using database:", databaseName);
-  })
-  .catch((err) => {
-    console.error("MongoDB Connection Error:", err);
-    process.exit(1); // Exit if we can't connect to the database
-  });
-
 // create a new express server
 const app = express();
 const FRONTEND_URL = "https://final-grade-calculator.onrender.com";
@@ -77,73 +61,90 @@ app.use(validator.checkRoutes);
 // allow us to process POST requests
 app.use(express.json());
 
-// set up a session, which will persist login data across requests
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "session-secret",
-    resave: false,
-    saveUninitialized: false,
-    name: "connect.sid",
-    cookie: {
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      path: "/",
-    },
-    store: new (require("connect-mongo"))({
-      mongooseConnection: mongoose.connection,
-    }),
+// connect to mongodb
+mongoose
+  .connect(mongoConnectionURL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    dbName: databaseName,
   })
-);
+  .then(() => {
+    console.log("Connected to MongoDB successfully");
+    console.log("Using database:", databaseName);
 
-// Add session debugging middleware
-app.use((req, res, next) => {
-  console.log("Session ID:", req.sessionID);
-  console.log("Session User:", req.session.user);
-  next();
-});
+    // Set up session AFTER mongoose connection is established
+    app.use(
+      session({
+        secret: process.env.SESSION_SECRET || "session-secret",
+        resave: false,
+        saveUninitialized: false,
+        name: "connect.sid",
+        cookie: {
+          secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+          maxAge: 24 * 60 * 60 * 1000,
+          httpOnly: true,
+          path: "/",
+        },
+        store: new (require("connect-mongo"))({
+          mongoUrl: process.env.MONGO_SRV,
+          dbName: process.env.DB_NAME,
+        }),
+      })
+    );
 
-app.use(auth.populateCurrentUser);
-app.use("/api", api);
+    // Add session debugging middleware
+    app.use((req, res, next) => {
+      console.log("Session ID:", req.sessionID);
+      console.log("Session User:", req.session.user);
+      next();
+    });
 
-// load the compiled react files, which will serve /index.html and /bundle.js
-const reactPath = path.resolve(__dirname, "..", "client", "dist");
-app.use(express.static(reactPath));
+    app.use(auth.populateCurrentUser);
+    app.use("/api", api);
 
-// for all other routes, render index.html and let react router handle it
-app.get("*", (req, res) => {
-  res.sendFile(path.join(reactPath, "index.html"), (err) => {
-    if (err) {
-      console.log("Error sending client/dist/index.html:", err.status || 500);
-      res
-        .status(err.status || 500)
-        .send("Error sending client/dist/index.html - have you run `npm run build`?");
-    }
+    // load the compiled react files, which will serve /index.html and /bundle.js
+    const reactPath = path.resolve(__dirname, "..", "client", "dist");
+    app.use(express.static(reactPath));
+
+    // for all other routes, render index.html and let react router handle it
+    app.get("*", (req, res) => {
+      res.sendFile(path.join(reactPath, "index.html"), (err) => {
+        if (err) {
+          console.log("Error sending client/dist/index.html:", err.status || 500);
+          res
+            .status(err.status || 500)
+            .send("Error sending client/dist/index.html - have you run `npm run build`?");
+        }
+      });
+    });
+
+    // any server errors cause this function to run
+    app.use((err, req, res, next) => {
+      const status = err.status || 500;
+      if (status === 500) {
+        // 500 means Internal Server Error
+        console.log("The server errored when processing a request!");
+        console.log(err);
+      }
+
+      res.status(status);
+      res.send({
+        status: status,
+        message: err.message,
+      });
+    });
+
+    // hardcode port to 3000 for now
+    const port = 3000;
+    const server = http.Server(app);
+    socketManager.init(server);
+
+    server.listen(port, () => {
+      console.log(`Server running on port: ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error("MongoDB Connection Error:", err);
+    process.exit(1); // Exit if we can't connect to the database
   });
-});
-
-// any server errors cause this function to run
-app.use((err, req, res, next) => {
-  const status = err.status || 500;
-  if (status === 500) {
-    // 500 means Internal Server Error
-    console.log("The server errored when processing a request!");
-    console.log(err);
-  }
-
-  res.status(status);
-  res.send({
-    status: status,
-    message: err.message,
-  });
-});
-
-// hardcode port to 3000 for now
-const port = 3000;
-const server = http.Server(app);
-socketManager.init(server);
-
-server.listen(port, () => {
-  console.log(`Server running on port: ${port}`);
-});
