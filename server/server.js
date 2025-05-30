@@ -27,6 +27,7 @@ const express = require("express"); // backend framework for our node server.
 const session = require("express-session"); // library that stores info about each connected user
 const mongoose = require("mongoose"); // library to connect to MongoDB
 const path = require("path"); // provide utilities for working with file and directory paths
+const cors = require("cors");
 
 const api = require("./api");
 const auth = require("./auth");
@@ -62,6 +63,15 @@ mongoose
 
 // create a new express server
 const app = express();
+const FRONTEND_URL = "https://final-grade-calculator.onrender.com";
+
+app.use(
+  cors({
+    origin: FRONTEND_URL,
+    credentials: true,
+  })
+);
+
 app.use(validator.checkRoutes);
 
 // allow us to process POST requests
@@ -74,10 +84,11 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production", // true on Render
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // allow cross-origin
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
+
     store: new (require("connect-mongo"))(mongoose.connection),
   })
 );
