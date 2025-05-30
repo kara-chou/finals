@@ -67,9 +67,18 @@ const Home = () => {
 
   useEffect(() => {
     if (userId) {
-      get("/api/classes").then((classesData) => {
-        setClasses(classesData);
-      });
+      // Wait a bit for the session to be fully established
+      const timer = setTimeout(() => {
+        get("/api/classes")
+          .then((classesData) => {
+            setClasses(classesData);
+          })
+          .catch((error) => {
+            console.error("Failed to fetch classes:", error);
+          });
+      }, 300); // 300ms delay
+
+      return () => clearTimeout(timer);
     }
   }, [userId]);
 
