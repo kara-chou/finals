@@ -33,6 +33,16 @@ router.get("/whoami", (req, res) => {
   res.send(req.user);
 });
 
+router.get("/session-debug", (req, res) => {
+  res.json({
+    sessionID: req.sessionID,
+    sessionUser: req.session.user ? req.session.user._id : null,
+    reqUser: req.user ? req.user._id : null,
+    isLoggedIn: !!req.user,
+    cookies: req.headers.cookie,
+  });
+});
+
 router.post("/initsocket", (req, res) => {
   // do nothing if user not logged in
   if (req.user)
