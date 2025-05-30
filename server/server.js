@@ -77,6 +77,7 @@ mongoose
   .then(() => {
     console.log("Connected to MongoDB successfully");
     console.log("Using database:", databaseName);
+    app.set("trust proxy", 1);
 
     // Set up session AFTER mongoose connection is established
     app.use(
