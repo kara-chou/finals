@@ -36,9 +36,9 @@
 
 :root[data-theme="light"] {
   --bg: hsl(227, 57%, 89%);
-  --white: #0f1847;
-  --light-purple: #4d3f83;
-  --glass: rgba(255, 255, 255, 0.3);
+  --white: #0f2547;
+  --light-purple: #5f3f83;
+  --glass: rgba(255, 255, 255, 0.747);
   --placeholder: rgba(58, 27, 74, 0.3);
   --muted-glass: rgba(0, 0, 0, 0.05);
 }

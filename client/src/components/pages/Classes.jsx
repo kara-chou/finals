@@ -285,9 +285,10 @@ const Classes = () => {
     return `Default: ${desiredGrade} or ${decimal}`;
   };
 
-  // Add event listener to prevent scroll on inputs
+  // Add event listener to prevent scroll on category table inputs
   useEffect(() => {
-    const inputs = document.querySelectorAll('input[type="text"]');
+    // Only target inputs within the categories table
+    const categoryInputs = document.querySelectorAll('.categories-table input[type="text"]');
 
     const preventScroll = (e) => {
       e.preventDefault();
@@ -295,12 +296,12 @@ const Classes = () => {
       return false;
     };
 
-    inputs.forEach((input) => {
+    categoryInputs.forEach((input) => {
       input.addEventListener("wheel", preventScroll, { passive: false });
     });
 
     return () => {
-      inputs.forEach((input) => {
+      categoryInputs.forEach((input) => {
         input.removeEventListener("wheel", preventScroll);
       });
     };
